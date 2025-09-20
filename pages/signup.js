@@ -113,19 +113,34 @@ export default function Signup() {
       console.error('Signup error:', error);
       let errorMessage = 'Account creation failed. Please try again.';
       
-      switch (error.code) {
-        case 'auth/email-already-in-use':
-          errorMessage = 'An account with this email already exists.';
-          break;
-        case 'auth/invalid-email':
-          errorMessage = 'Please enter a valid email address.';
-          break;
-        case 'auth/weak-password':
-          errorMessage = 'Password is too weak. Please choose a stronger password.';
-          break;
-        case 'auth/operation-not-allowed':
-          errorMessage = 'Account creation is currently disabled.';
-          break;
+      // Check if Firebase is properly configured
+      if (error.message && error.message.includes('Firebase')) {
+        errorMessage = 'Firebase configuration error. Please contact support.';
+      } else if (error.code) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = 'An account with this email already exists.';
+            break;
+          case 'auth/invalid-email':
+            errorMessage = 'Please enter a valid email address.';
+            break;
+          case 'auth/weak-password':
+            errorMessage = 'Password is too weak. Please choose a stronger password.';
+            break;
+          case 'auth/operation-not-allowed':
+            errorMessage = 'Email/password authentication is not enabled. Please contact support.';
+            break;
+          case 'auth/configuration-not-found':
+            errorMessage = 'Firebase configuration not found. Please contact support.';
+            break;
+          case 'auth/invalid-api-key':
+            errorMessage = 'Invalid Firebase API key. Please contact support.';
+            break;
+          default:
+            errorMessage = `Authentication error: ${error.code}. Please contact support.`;
+        }
+      } else {
+        errorMessage = `Error: ${error.message || 'Unknown error occurred'}`;
       }
       
       toast.error(errorMessage);
