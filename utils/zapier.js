@@ -109,3 +109,6 @@ export const triggerAutomation = async (eventType, data) => {
     console.error(`Failed to trigger automation for ${eventType}:`, error);
   }
 };
+
+// Alias for backward compatibility
+export const sendZapierWebhook = sendToZapier;

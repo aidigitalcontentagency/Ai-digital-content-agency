@@ -27,7 +27,6 @@ export default function Admin() {
     totalRevenue: 0,
     totalUsers: 0
   });
-  const router = useRouter();
 
   // Check admin status
   useEffect(() => {
