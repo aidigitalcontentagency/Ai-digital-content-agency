@@ -1,37 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { FileText, Image, Video, Mic, ArrowRight, CheckCircle, Star, Users, Clock, Shield } from 'lucide-react';
+import { FileText, Image, Video, Mic, ArrowRight, CheckCircle, Star, Users, Clock, Shield, Crown, Zap } from 'lucide-react';
+import { PRICING_PLANS, formatPrice, trackPageVisit } from '../utils/pricing';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../utils/firebase';
 
 export default function Home() {
   const [activeService, setActiveService] = useState('blog');
+  const [user] = useAuthState(auth);
+
+  // Track page visit for monetization
+  useEffect(() => {
+    trackPageVisit(user?.uid, 'home');
+  }, [user]);
 
   const services = [
     {
-      id: 'blog',
-      name: 'Blog Writing',
+      id: 'blog-writing',
+      name: 'Content Writing',
       icon: FileText,
-      description: 'AI-powered blog posts and articles that engage your audience',
-      features: ['SEO Optimized', 'Custom Topics', 'Multiple Formats', 'Fast Delivery'],
-      price: 'Starting at $25',
+      description: 'Professional AI-powered blog posts and articles that engage your audience',
+      features: ['SEO Optimized', 'Up to 50 posts/month', 'Multiple Formats', '24hr Delivery'],
+      price: formatPrice(PRICING_PLANS['blog-writing'].price) + '/month',
       color: 'text-blue-600'
     },
     {
-      id: 'graphics',
-      name: 'Graphic Design',
+      id: 'graphics-design',
+      name: 'Graphics Design',
       icon: Image,
       description: 'Stunning visuals and graphics created with AI technology',
-      features: ['Custom Designs', 'Multiple Styles', 'High Resolution', 'Commercial Use'],
-      price: 'Starting at $15',
+      features: ['Custom Designs', 'Up to 100 graphics/month', 'High Resolution', 'Commercial Use'],
+      price: formatPrice(PRICING_PLANS['graphics-design'].price) + '/month',
       color: 'text-green-600'
     },
     {
-      id: 'video',
-      name: 'Video Production',
+      id: 'video-editing',
+      name: 'Video Editing',
       icon: Video,
-      description: 'Professional video content generated with cutting-edge AI',
-      features: ['Script to Video', 'Multiple Formats', 'HD Quality', 'Custom Branding'],
-      price: 'Starting at $50',
+      description: 'Professional video editing and production services',
+      features: ['Up to 20 videos/month', 'Professional Editing', 'HD Quality', 'Custom Effects'],
+      price: formatPrice(PRICING_PLANS['video-editing'].price) + '/month',
       color: 'text-purple-600'
     },
     {
@@ -39,8 +48,8 @@ export default function Home() {
       name: 'Voiceover Services',
       icon: Mic,
       description: 'Natural-sounding AI voiceovers in multiple languages',
-      features: ['Multiple Voices', 'Any Language', 'Studio Quality', 'Fast Turnaround'],
-      price: 'Starting at $20',
+      features: ['Up to 30 voiceovers/month', 'Multiple Languages', 'Studio Quality', 'Commercial Rights'],
+      price: formatPrice(PRICING_PLANS['voiceover'].price) + '/month',
       color: 'text-orange-600'
     }
   ];
@@ -248,6 +257,106 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-xl text-gray-600">
+              Choose the perfect plan for your content needs. All plans include unlimited revisions.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {Object.entries(PRICING_PLANS).filter(([key]) => key !== 'complete-package').map(([key, plan]) => (
+              <div key={key} className={`bg-white rounded-lg shadow-lg border-2 ${plan.popular ? 'border-primary-500' : 'border-gray-200'} p-8 relative`}>
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-primary-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  <p className="text-gray-600 mb-4">{plan.description}</p>
+                  <div className="text-4xl font-bold text-primary-600 mb-2">
+                    {formatPrice(plan.price)}
+                    <span className="text-lg text-gray-500 font-normal">/{plan.billing}</span>
+                  </div>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-center">
+                      <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link 
+                  href="/signup" 
+                  className={`w-full block text-center py-3 px-6 rounded-lg font-semibold transition-colors ${
+                    plan.popular 
+                      ? 'bg-primary-600 text-white hover:bg-primary-700' 
+                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                  }`}
+                >
+                  Get Started
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {/* Complete Package - Featured */}
+          <div className="bg-gradient-to-r from-primary-600 to-purple-600 rounded-lg shadow-xl p-8 text-white relative overflow-hidden">
+            <div className="absolute top-4 right-4">
+              <Crown className="w-8 h-8 text-yellow-400" />
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              <div>
+                <div className="flex items-center mb-4">
+                  <span className="bg-yellow-400 text-primary-900 px-3 py-1 rounded-full text-sm font-semibold mr-3">
+                    Best Value
+                  </span>
+                  <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    Save {PRICING_PLANS['complete-package'].discount}%
+                  </span>
+                </div>
+                <h3 className="text-3xl font-bold mb-2">{PRICING_PLANS['complete-package'].name}</h3>
+                <p className="text-primary-100 mb-4">{PRICING_PLANS['complete-package'].description}</p>
+                <div className="flex items-baseline mb-6">
+                  <span className="text-5xl font-bold">{formatPrice(PRICING_PLANS['complete-package'].price)}</span>
+                  <span className="text-xl ml-2">/month</span>
+                  <span className="text-primary-200 line-through ml-4">
+                    {formatPrice(PRICING_PLANS['complete-package'].originalPrice)}
+                  </span>
+                </div>
+                <Link 
+                  href="/signup" 
+                  className="bg-yellow-400 text-primary-900 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-300 transition-colors inline-flex items-center"
+                >
+                  Start Complete Package
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
+              </div>
+              <div>
+                <h4 className="text-xl font-semibold mb-4">Everything Included:</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {PRICING_PLANS['complete-package'].features.map((feature, index) => (
+                    <div key={index} className="flex items-center">
+                      <Zap className="w-4 h-4 text-yellow-400 mr-2" />
+                      <span className="text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

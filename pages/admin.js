@@ -1,16 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, getDocs } from 'firebase/firestore';
-import { db } from '../utils/firebase';
+import { auth, db } from '../utils/firebase';
 import { notifyOrderComplete } from '../utils/zapier';
 import OrderCard from '../components/OrderCard';
 import toast from 'react-hot-toast';
-import { Users, FileText, Clock, CheckCircle, DollarSign, TrendingUp, Filter } from 'lucide-react';
+import { Users, FileText, Clock, CheckCircle, DollarSign, TrendingUp, Filter, Shield, AlertTriangle } from 'lucide-react';
+import { isAdmin } from '../utils/adminAuth';
 
-export default function Admin({ user }) {
+export default function Admin() {
+  const [user, loading] = useAuthState(auth);
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const [adminLoading, setAdminLoading] = useState(true);
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [stats, setStats] = useState({
@@ -23,15 +29,40 @@ export default function Admin({ user }) {
   });
   const router = useRouter();
 
+  // Check admin status
   useEffect(() => {
-    if (!user) {
-      router.push('/login');
-      return;
-    }
+    const checkAdminAccess = async () => {
+      if (loading) return;
+      
+      if (!user) {
+        router.push('/login');
+        return;
+      }
 
-    // Check if user is admin (in a real app, this would be stored in user profile)
-    // For demo purposes, we'll assume any logged-in user can access admin
-    // In production, you'd check user.role === 'admin'
+      try {
+        const adminStatus = await isAdmin(user);
+        setIsAdminUser(adminStatus);
+        
+        if (!adminStatus) {
+          toast.error('Access denied. Admin privileges required.');
+          router.push('/dashboard');
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking admin status:', error);
+        toast.error('Access verification failed.');
+        router.push('/dashboard');
+        return;
+      } finally {
+        setAdminLoading(false);
+      }
+    };
+
+    checkAdminAccess();
+  }, [user, loading, router]);
+
+  useEffect(() => {
+    if (!isAdminUser || adminLoading) return;
 
     // Subscribe to all orders
     const ordersQuery = query(
@@ -114,8 +145,37 @@ export default function Admin({ user }) {
     return order.status === filter;
   });
 
-  if (!user) {
-    return null;
+  // Show loading while checking authentication
+  if (loading || adminLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Verifying admin access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show unauthorized access message
+  if (!user || !isAdminUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center max-w-md mx-auto p-8">
+          <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
+          <p className="text-gray-600 mb-6">
+            You don't have permission to access the admin panel. Only authorized administrators can view this page.
+          </p>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Go to Dashboard
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (isLoading) {

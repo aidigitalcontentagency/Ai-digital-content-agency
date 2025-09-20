@@ -1,23 +1,50 @@
-# AI Digital Content Agency
+# 🚀 AI Digital Content Agency
 
-A modern, full-stack web application for an AI-powered digital content agency built with Next.js, Firebase, and Tailwind CSS.
+A production-ready, full-stack web application for AI-powered digital content services with secure admin panel, comprehensive payment integration, and auto-monetization system.
 
-## Features
+## 🌟 Live Demo
 
-### 🎯 Core Services
-- **Blog Writing**: AI-generated blog posts and articles with SEO optimization
-- **Graphic Design**: AI-created visuals and graphics with multiple styles
-- **Video Production**: Script-to-video generation with HD quality
-- **Voiceover Services**: Natural-sounding AI voiceovers in multiple languages
+- **Website**: [https://brand.page/Ganeshagamingworld](https://brand.page/Ganeshagamingworld)
+- **Admin Panel**: [https://brand.page/Ganeshagamingworld/admin](https://brand.page/Ganeshagamingworld/admin)
+- **User Dashboard**: [https://brand.page/Ganeshagamingworld/dashboard](https://brand.page/Ganeshagamingworld/dashboard)
 
-### 🔐 Authentication & User Management
-- User registration and login with Firebase Auth
-- Role-based access control (Client/Admin)
-- Secure user profiles and preferences
+## 🎯 Features
 
-### 📊 Dashboard Features
-- **Client Dashboard**: Order management, project tracking, download center
-- **Admin Dashboard**: Order management, user analytics, revenue tracking
+### 🔐 Security & Authentication
+- **Secure Admin Panel**: Only `ganeshworkspvtltd@gmail.com` has admin access
+- **Role-based Access Control**: Admin-only features and routes
+- **Firebase Authentication**: Secure user management
+- **Protected API Routes**: Admin middleware protection
+
+### 💰 Pricing & Monetization
+- **Paid Services**: All services require payment
+  - Content Writing: ₹3,999/month (50 posts)
+  - Video Editing: ₹5,999/month (20 videos)
+  - Graphics Design: ₹2,999/month (100 graphics)
+  - Voiceover: ₹1,999/month (30 voiceovers)
+  - Complete Package: ₹12,999/month (13% savings)
+- **Auto Monetization**: User visit tracking, activity earnings
+- **Dual Payment Gateways**: Cashfree & PayPal integration
+- **Revenue Analytics**: Admin dashboard with earnings tracking
+
+### 🎨 AI-Powered Services
+- **Content Writing**: SEO-optimized blog posts and articles
+- **Graphics Design**: AI-generated visuals and branding
+- **Video Editing**: Professional video production
+- **Voiceover Services**: Multi-language AI voices
+
+### 📊 Admin Dashboard
+- **Complete Website Control**: Full read/write permissions
+- **Order Management**: Track all orders and payments
+- **User Analytics**: Monitor user activity and earnings
+- **Revenue Tracking**: Real-time monetization data
+- **Service Management**: Control pricing and features
+
+### 🔄 Automation & Integration
+- **Zapier Webhooks**: Automated workflows
+- **Real-time Updates**: Live order status tracking
+- **Email Notifications**: Automated customer communication
+- **Payment Webhooks**: Instant payment verification
 - Real-time order status updates
 - Comprehensive statistics and reporting
 

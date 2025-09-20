@@ -1,11 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Menu, X, User, LogOut } from 'lucide-react';
+import { isAdmin } from '../utils/adminAuth';
 
 const Header = ({ user, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdminUser, setIsAdminUser] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (user) {
+        const adminStatus = await isAdmin(user);
+        setIsAdminUser(adminStatus);
+      } else {
+        setIsAdminUser(false);
+      }
+    };
+    checkAdminStatus();
+  }, [user]);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -13,6 +27,11 @@ const Header = ({ user, onLogout }) => {
     { name: 'About', href: '/#about' },
     { name: 'Contact', href: '/#contact' },
   ];
+
+  // Add admin link only for admin users
+  const navigationWithAdmin = isAdminUser 
+    ? [...navigation, { name: 'Admin Panel', href: '/admin' }]
+    : navigation;
 
   const isActive = (href) => {
     if (href === '/') return router.pathname === '/';
@@ -37,7 +56,7 @@ const Header = ({ user, onLogout }) => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
+            {navigationWithAdmin.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -108,7 +127,7 @@ const Header = ({ user, onLogout }) => {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200">
-              {navigation.map((item) => (
+              {navigationWithAdmin.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
