@@ -111,7 +111,7 @@ export default function Admin() {
     loadUsers();
 
     return () => unsubscribeOrders();
-  }, [user, router]);
+  }, [user, router, adminLoading, isAdminUser]);
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
