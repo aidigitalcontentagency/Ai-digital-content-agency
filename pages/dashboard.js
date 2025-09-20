@@ -28,36 +28,61 @@ export default function Dashboard({ user }) {
       return;
     }
 
-    // Subscribe to user's orders
-    const ordersQuery = query(
-      collection(db, 'orders'),
-      where('userId', '==', user.uid),
-      orderBy('createdAt', 'desc')
-    );
+    // Set a timeout to prevent infinite loading
+    const loadingTimeout = setTimeout(() => {
+      if (isLoading) {
+        console.warn('Dashboard loading timeout - Firebase may not be configured');
+        setIsLoading(false);
+        toast.error('Unable to connect to database. Please check Firebase configuration.');
+      }
+    }, 10000); // 10 second timeout
 
-    const unsubscribe = onSnapshot(ordersQuery, (snapshot) => {
-      const ordersData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      
-      setOrders(ordersData);
-      
-      // Calculate stats
-      const newStats = {
-        total: ordersData.length,
-        pending: ordersData.filter(o => o.status === 'pending').length,
-        inProgress: ordersData.filter(o => o.status === 'in_progress').length,
-        completed: ordersData.filter(o => o.status === 'completed').length,
-        totalSpent: ordersData.reduce((sum, o) => sum + (o.estimatedPrice || 0), 0)
+    try {
+      // Subscribe to user's orders
+      const ordersQuery = query(
+        collection(db, 'orders'),
+        where('userId', '==', user.uid),
+        orderBy('createdAt', 'desc')
+      );
+
+      const unsubscribe = onSnapshot(ordersQuery, (snapshot) => {
+        clearTimeout(loadingTimeout);
+        const ordersData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        setOrders(ordersData);
+        
+        // Calculate stats
+        const newStats = {
+          total: ordersData.length,
+          pending: ordersData.filter(o => o.status === 'pending').length,
+          inProgress: ordersData.filter(o => o.status === 'in_progress').length,
+          completed: ordersData.filter(o => o.status === 'completed').length,
+          totalSpent: ordersData.reduce((sum, o) => sum + (o.estimatedPrice || 0), 0)
+        };
+        
+        setStats(newStats);
+        setIsLoading(false);
+      }, (error) => {
+        clearTimeout(loadingTimeout);
+        console.error('Error fetching orders:', error);
+        toast.error('Unable to load orders. Please check Firebase configuration.');
+        setIsLoading(false);
+      });
+
+      return () => {
+        clearTimeout(loadingTimeout);
+        unsubscribe();
       };
-      
-      setStats(newStats);
+    } catch (error) {
+      clearTimeout(loadingTimeout);
+      console.error('Firebase initialization error:', error);
+      toast.error('Database connection failed. Please check Firebase setup.');
       setIsLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [user, router]);
+    }
+  }, [user, router, isLoading]);
 
   const handleOrderSubmit = async (orderData) => {
     try {

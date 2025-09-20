@@ -91,6 +91,10 @@ export default function Admin() {
       
       setStats(newStats);
       setIsLoading(false);
+    }, (error) => {
+      console.error('Error fetching admin orders:', error);
+      toast.error('Unable to load orders data.');
+      setIsLoading(false);
     });
 
     // Load users count
