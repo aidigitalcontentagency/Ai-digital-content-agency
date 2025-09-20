@@ -4,9 +4,14 @@ A production-ready, full-stack web application for AI-powered digital content se
 
 ## 🌟 Live Demo
 
-- **Website**: [https://brand.page/Ganeshagamingworld](https://brand.page/Ganeshagamingworld)
-- **Admin Panel**: [https://brand.page/Ganeshagamingworld/admin](https://brand.page/Ganeshagamingworld/admin)
-- **User Dashboard**: [https://brand.page/Ganeshagamingworld/dashboard](https://brand.page/Ganeshagamingworld/dashboard)
+> **Note**: Website is ready for deployment. Follow the deployment guide below to make it live.
+
+**Planned URLs** (after deployment):
+- **Website**: `https://brand.page/Ganeshagamingworld`
+- **Admin Panel**: `https://brand.page/Ganeshagamingworld/admin`
+- **User Dashboard**: `https://brand.page/Ganeshagamingworld/dashboard`
+
+**Current Status**: ⚠️ Ready for deployment - Not yet live
 
 ## 🎯 Features
 
@@ -221,6 +226,155 @@ A production-ready, full-stack web application for AI-powered digital content se
   "language": "en"
 }
 ```
+
+## 🚀 Deployment Guide
+
+### Step 1: Quick Local Testing
+
+```bash
+# Install dependencies
+npm install
+
+# Create environment file
+cp .env.example .env.local
+
+# Add your Firebase keys to .env.local (see Environment Variables section)
+# Start development server
+npm run dev
+```
+
+Visit `http://localhost:3000` to see your website running locally.
+
+### Step 2: Vercel Deployment (Recommended)
+
+#### Option A: Deploy via Vercel Dashboard
+1. **Go to [Vercel.com](https://vercel.com)** and sign up/login
+2. **Import Project**: Click "New Project" → Import from GitHub
+3. **Select Repository**: Choose `aidigitalcontentagency/Ai-digital-content-agency`
+4. **Configure**: 
+   - Framework Preset: Next.js
+   - Root Directory: `./`
+   - Build Command: `npm run build`
+   - Output Directory: `.next`
+5. **Add Environment Variables** (see Required Environment Variables below)
+6. **Deploy**: Click "Deploy" button
+
+#### Option B: Deploy via Vercel CLI
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Login to Vercel
+vercel login
+
+# Deploy
+vercel --prod
+```
+
+### Step 3: Custom Domain Setup
+
+1. **In Vercel Dashboard**:
+   - Go to your project → Settings → Domains
+   - Add custom domain: `ganeshagamingworld.brand.page`
+
+2. **DNS Configuration**:
+   - Contact your domain provider (brand.page)
+   - Add CNAME record: `ganeshagamingworld` → `your-vercel-url.vercel.app`
+
+### Step 4: Required Environment Variables
+
+In Vercel Dashboard → Settings → Environment Variables, add these **REQUIRED** keys:
+
+```env
+# Firebase (Get from Firebase Console - firebase.google.com)
+NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+
+# Admin (Pre-configured)
+ADMIN_EMAIL=ganeshworkspvtltd@gmail.com
+
+# Payment Gateways (Get from respective providers)
+CASHFREE_CLIENT_ID=your_cashfree_client_id
+CASHFREE_CLIENT_SECRET=your_cashfree_secret
+CASHFREE_ENVIRONMENT=production
+
+PAYPAL_CLIENT_ID=your_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_secret
+PAYPAL_ENVIRONMENT=live
+
+# Domain (Update after deployment)
+NEXT_PUBLIC_DOMAIN=https://ganeshagamingworld.brand.page
+NEXT_PUBLIC_API_URL=https://ganeshagamingworld.brand.page/api
+
+# AI Services (Get from OpenAI)
+OPENAI_API_KEY=your_openai_api_key
+
+# Security (Generate random 32-character strings)
+JWT_SECRET=your_32_character_secret_key_here
+ENCRYPTION_KEY=your_32_character_encryption_key_here
+```
+
+### Step 5: Firebase Setup
+
+1. **Create Firebase Project**:
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Click "Create a project"
+   - Enter project name: `ai-digital-agency`
+   - Enable Google Analytics (optional)
+
+2. **Enable Authentication**:
+   - Go to Authentication → Sign-in method
+   - Enable "Email/Password"
+
+3. **Create Firestore Database**:
+   - Go to Firestore Database
+   - Click "Create database"
+   - Start in production mode
+   - Choose location (asia-south1 for India)
+
+4. **Get Configuration**:
+   - Go to Project Settings → General
+   - Scroll to "Your apps" → Web app
+   - Copy the config values to your environment variables
+
+### Step 6: Payment Gateway Setup
+
+#### Cashfree Setup (for Indian customers)
+1. **Sign up at [Cashfree](https://www.cashfree.com/)**
+2. **Get API credentials**:
+   - Go to Developers → API Keys
+   - Copy Client ID and Client Secret
+   - Add to environment variables
+
+#### PayPal Setup (for international customers)
+1. **Sign up at [PayPal Developer](https://developer.paypal.com/)**
+2. **Create App**:
+   - Go to My Apps & Credentials
+   - Create New App
+   - Copy Client ID and Client Secret
+   - Add to environment variables
+
+### Step 7: Post-Deployment Checklist
+
+- ✅ Website loads at your custom domain
+- ✅ User registration/login works
+- ✅ Admin panel accessible only to `ganeshworkspvtltd@gmail.com`
+- ✅ Payment gateways working
+- ✅ All services show paid pricing
+- ✅ Order placement and tracking functional
+
+### Troubleshooting
+
+**Common Issues:**
+
+1. **404 Error**: Check if domain is properly configured
+2. **Firebase Error**: Verify all Firebase environment variables
+3. **Payment Error**: Check payment gateway credentials
+4. **Admin Access Denied**: Ensure you're logged in with `ganeshworkspvtltd@gmail.com`
 
 ## Contributing
 
