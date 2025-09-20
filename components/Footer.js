@@ -35,7 +35,7 @@ const Footer = () => {
               <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">AI</span>
               </div>
-              <span className="ml-2 text-xl font-bold">Digital Agency</span>
+              <span className="ml-2 text-xl font-bold">Ganesh Digital Work's</span>
             </div>
             <p className="text-secondary-300 mb-6 max-w-md">
               Transform your business with AI-powered content creation. We deliver 
@@ -47,15 +47,15 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary-400" />
-                <span className="text-secondary-300">contact@aidigitalagency.com</span>
+                <span className="text-secondary-300">ganeshworkspvtltd@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary-400" />
-                <span className="text-secondary-300">+1 (555) 123-4567</span>
+                <span className="text-secondary-300">+919234906001</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-primary-400" />
-                <span className="text-secondary-300">New York, NY 10001</span>
+                <span className="text-secondary-300">India</span>
               </div>
             </div>
           </div>

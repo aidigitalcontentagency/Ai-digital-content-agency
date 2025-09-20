@@ -30,7 +30,7 @@ const Header = ({ user, onLogout }) => {
                 <span className="text-white font-bold text-lg">AI</span>
               </div>
               <span className="ml-2 text-xl font-bold text-gray-900">
-                Digital Agency
+                Ganesh Digital Work's
               </span>
             </Link>
           </div>
